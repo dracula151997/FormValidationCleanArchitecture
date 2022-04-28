@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">FormValidationCleanArchitecture</string>
+    <string name="error_msg_email_blank">The email can\'t be blank</string>
+    <string name="error_msg_email_not_valid">That\'s not a valid email</string>
+    <string name="error_msg_password_blank">The password can\'t be blank</string>
+    <string name="error_msg_password_length">The password needs to consist of at least 8 characters</string>
+    <string name="error_msg_password_letter_and_digit">The password needs to contain at least one letter and digit</string>
+    <string name="error_msg_passwords_donot_match">Passwords don\'t match</string>
+</resources>
