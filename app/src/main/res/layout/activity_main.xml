@@ -1,30 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="com.hassanmohammed.formvalidationcleanarchitecture.presentation.RegistrationFormValidateState" />
+
+        <import type="com.hassanmohammed.formvalidationcleanarchitecture.presentation.RegistrationFormEvent" />
+
+        <variable
+            name="formState"
+            type="RegistrationFormValidateState" />
+
+        <variable
+            name="viewModel"
+            type="com.hassanmohammed.formvalidationcleanarchitecture.presentation.MainViewModel" />
 
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="16dp"
         android:gravity="center"
         android:orientation="vertical"
+        android:paddingHorizontal="16dp"
         tools:context=".presentation.MainActivity">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/email_text_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email">
+            android:hint="Email"
+            app:errorEnabled="@{viewModel.formValidationState.emailError != null}"
+            bind:removeErrorWhenTyping="@{true}"
+            bind:setTextFieldError="@{viewModel.formValidationState.emailError}">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/email_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:afterTextChanged="@{(text) -> viewModel.onEmailChanged(String.valueOf(text))}"
                 android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -34,12 +51,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="Password"
-            app:passwordToggleEnabled="true">
+            app:errorEnabled="@{viewModel.formValidationState.passwordError != null}"
+            app:passwordToggleEnabled="true"
+            bind:removeErrorWhenTyping="@{true}"
+            bind:setTextFieldError="@{viewModel.formValidationState.passwordError}">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/password_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:afterTextChanged="@{(text) -> viewModel.onPasswordChanged(String.valueOf(text))}"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -49,12 +70,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="Repeated password"
-            app:passwordToggleEnabled="true">
+            app:errorEnabled="@{viewModel.formValidationState.repeatedPasswordError != null}"
+            app:passwordToggleEnabled="true"
+            bind:removeErrorWhenTyping="@{true}"
+            bind:setTextFieldError="@{viewModel.formValidationState.repeatedPasswordError}">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/repeated_password_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:afterTextChanged="@{(text) -> viewModel.onRepeatedPasswordChanged(String.valueOf(text))}"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -63,6 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:onClick="@{() -> viewModel.onSubmit()}"
             android:text="Submit" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

@@ -7,10 +7,7 @@ import com.hassanmohammed.formvalidationcleanarchitecture.use_cases.FetchDataFro
 import com.hassanmohammed.formvalidationcleanarchitecture.use_cases.PasswordValidator
 import com.hassanmohammed.formvalidationcleanarchitecture.use_cases.RepeatedPasswordValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,8 +23,8 @@ class MainViewModel @Inject constructor(
     )
     val formValidationState = _state.asStateFlow()
 
-    private val _response = MutableStateFlow("")
-    val responseFlow = _response.asStateFlow()
+    private val _response = MutableSharedFlow<String>()
+    val responseFlow = _response.asSharedFlow()
 
     fun onEvent(event: RegistrationFormEvent) {
         when (event) {
@@ -45,6 +42,26 @@ class MainViewModel @Inject constructor(
             RegistrationFormEvent.Submit -> submitData()
         }
     }
+
+    fun onEmailChanged(email: String){
+        _state.value = formValidationState.value.copy(
+            email = email
+        )
+    }
+
+    fun onPasswordChanged(password: String){
+        _state.value = formValidationState.value.copy(
+            password = password
+        )
+    }
+
+    fun onRepeatedPasswordChanged(repeatedPassword: String){
+        _state.value = formValidationState.value.copy(
+            repeatedPassword = repeatedPassword
+        )
+    }
+
+    fun onSubmit() = submitData()
 
     private fun submitData() {
         val emailValidated = emailValidator.validate(formValidationState.value.email)
@@ -71,7 +88,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             fetchDataFromDataSourceUseCase()
                 .onEach {
-                    _response.value = it
+                    _response.emit(it)
                 }.launchIn(this)
         }
     }

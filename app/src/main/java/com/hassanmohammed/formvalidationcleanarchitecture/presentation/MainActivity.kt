@@ -19,32 +19,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        lifecycleScope.launchWhenCreated {
-            viewModel.formValidationState.collect {
-                binding.emailTextField.isErrorEnabled = it.emailError != null
-                binding.emailTextField.error = it.emailError
-                binding.passwordTextField.isErrorEnabled = it.passwordError != null
-                binding.passwordTextField.error = it.passwordError
-                binding.repeatedPasswordTextField.isErrorEnabled = it.repeatedPasswordError != null
-                binding.repeatedPasswordTextField.error = it.repeatedPasswordError
-            }
-        }
-
-        binding.emailEt.doOnTextChanged { text, _, _, _ ->
-            viewModel.onEvent(RegistrationFormEvent.EmailChanged(text.toString()))
-        }
-
-        binding.passwordEt.doOnTextChanged { text, start, before, count ->
-            viewModel.onEvent(RegistrationFormEvent.PasswordChanged(text.toString()))
-        }
-
-        binding.repeatedPasswordEt.doOnTextChanged { text, start, before, count ->
-            viewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(text.toString()))
-        }
-
-        binding.submitBtn.setOnClickListener {
-            viewModel.onEvent(RegistrationFormEvent.Submit)
-        }
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
 
         lifecycleScope.launchWhenCreated {
             viewModel.responseFlow.collect {
