@@ -2,10 +2,10 @@ package com.hassanmohammed.formvalidationcleanarchitecture.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hassanmohammed.formvalidationcleanarchitecture.use_cases.EmailValidator
-import com.hassanmohammed.formvalidationcleanarchitecture.use_cases.FetchDataFromDataSourceUseCase
-import com.hassanmohammed.formvalidationcleanarchitecture.use_cases.PasswordValidator
-import com.hassanmohammed.formvalidationcleanarchitecture.use_cases.RepeatedPasswordValidator
+import com.hassanmohammed.formvalidationcleanarchitecture.di.qualifiers.EmailValidatorQualifier
+import com.hassanmohammed.formvalidationcleanarchitecture.di.qualifiers.PasswordValidatorQualifier
+import com.hassanmohammed.formvalidationcleanarchitecture.di.qualifiers.RepeatedPasswordValidatorQualifier
+import com.hassanmohammed.formvalidationcleanarchitecture.use_cases.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -13,9 +13,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val emailValidator: EmailValidator,
-    private val passwordValidator: PasswordValidator,
-    private val repeatedPasswordValidator: RepeatedPasswordValidator,
+    @EmailValidatorQualifier private val emailValidator: IValidator,
+    @PasswordValidatorQualifier private val passwordValidator: IValidator,
+    @RepeatedPasswordValidatorQualifier private val repeatedPasswordValidator: IValidator,
     private val fetchDataFromDataSourceUseCase: FetchDataFromDataSourceUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(
@@ -43,21 +43,24 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun onEmailChanged(email: String){
+    fun onEmailChanged(email: String) {
         _state.value = formValidationState.value.copy(
-            email = email
+            email = email,
+            emailError = null
         )
     }
 
-    fun onPasswordChanged(password: String){
+    fun onPasswordChanged(password: String) {
         _state.value = formValidationState.value.copy(
-            password = password
+            password = password,
+            passwordError = null
         )
     }
 
-    fun onRepeatedPasswordChanged(repeatedPassword: String){
+    fun onRepeatedPasswordChanged(repeatedPassword: String) {
         _state.value = formValidationState.value.copy(
-            repeatedPassword = repeatedPassword
+            repeatedPassword = repeatedPassword,
+            repeatedPasswordError = null
         )
     }
 
@@ -84,6 +87,12 @@ class MainViewModel @Inject constructor(
                 repeatedPasswordError = repeatedPasswordValidated.errorMessage
             )
             return
+        } else {
+            _state.value = formValidationState.value.copy(
+                emailError = null,
+                passwordError = null,
+                repeatedPasswordError = null
+            )
         }
         viewModelScope.launch {
             fetchDataFromDataSourceUseCase()

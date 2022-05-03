@@ -5,14 +5,14 @@ import androidx.databinding.BindingAdapter
 import com.google.android.material.textfield.TextInputLayout
 
 @BindingAdapter("bind:setTextFieldError")
-fun TextInputLayout.bindTextFieldError(error: String?){
+fun TextInputLayout.bindTextFieldError(error: String?) {
     error?.let { this.error = it }
 }
 
 @BindingAdapter("bind:removeErrorWhenTyping")
 fun TextInputLayout.bindRemoveErrorWhenTyping(removeError: Boolean){
-    this.editText?.doOnTextChanged { _, _, _, _ ->
-        if (isErrorEnabled)
-            isErrorEnabled = false
+    this.editText?.doOnTextChanged { text, start, before, count ->
+        this.isErrorEnabled = false
+        error = null
     }
 }

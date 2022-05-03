@@ -5,8 +5,12 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 @ViewModelScoped
-class PasswordValidator @Inject constructor() {
-    fun validate(password: String): FormValidationResult {
+class PasswordValidator @Inject constructor() : IValidator{
+
+    override fun validate(vararg inputs: String): FormValidationResult {
+        if (inputs.size > 1)
+            throw IllegalArgumentException()
+        val password = inputs.first()
         if (password.isEmpty())
             return FormValidationResult(
                 success = false,
@@ -31,10 +35,8 @@ class PasswordValidator @Inject constructor() {
             )
 
 
-            return FormValidationResult(
-                success = true
-            )
-
-
+        return FormValidationResult(
+            success = true
+        )
     }
 }

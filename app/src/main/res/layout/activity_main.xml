@@ -34,7 +34,6 @@
             android:layout_height="wrap_content"
             android:hint="Email"
             app:errorEnabled="@{viewModel.formValidationState.emailError != null}"
-            bind:removeErrorWhenTyping="@{true}"
             bind:setTextFieldError="@{viewModel.formValidationState.emailError}">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -53,7 +52,6 @@
             android:hint="Password"
             app:errorEnabled="@{viewModel.formValidationState.passwordError != null}"
             app:passwordToggleEnabled="true"
-            bind:removeErrorWhenTyping="@{true}"
             bind:setTextFieldError="@{viewModel.formValidationState.passwordError}">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -72,7 +70,6 @@
             android:hint="Repeated password"
             app:errorEnabled="@{viewModel.formValidationState.repeatedPasswordError != null}"
             app:passwordToggleEnabled="true"
-            bind:removeErrorWhenTyping="@{true}"
             bind:setTextFieldError="@{viewModel.formValidationState.repeatedPasswordError}">
 
             <com.google.android.material.textfield.TextInputEditText

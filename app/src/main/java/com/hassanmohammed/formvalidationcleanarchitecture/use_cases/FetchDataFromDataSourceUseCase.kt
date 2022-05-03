@@ -8,7 +8,7 @@ import javax.inject.Inject
 @ViewModelScoped
 class FetchDataFromDataSourceUseCase @Inject constructor() {
     operator fun invoke() = flow {
-        delay(1000)
+        delay(400)
         emit("Success")
     }
 }
